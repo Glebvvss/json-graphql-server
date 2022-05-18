@@ -50,15 +50,15 @@ const gqlAgent = (query, variables) =>
 
 describe('integration tests', () => {
     it('returns all entities by default', () =>
-        gqlAgent('{ allPosts { id } }').expect({
+        gqlAgent('{ posts { id } }').expect({
             data: {
-                allPosts: [{ id: '1' }, { id: '2' }, { id: '3' }],
+                posts: [{ id: '1' }, { id: '2' }, { id: '3' }],
             },
         }));
     it('filters by string using the q filter in a case-insensitive way', () =>
-        gqlAgent('{ allPosts(filter: { q: "lorem" }) { id } }').expect({
+        gqlAgent('{ posts(filter: { q: "lorem" }) { id } }').expect({
             data: {
-                allPosts: [{ id: '1' }],
+                posts: [{ id: '1' }],
             },
         }));
     it('gets an entity by id', () =>

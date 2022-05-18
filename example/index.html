@@ -53,9 +53,9 @@
                 xhr.onload = function() {
                     const result = JSON.parse(xhr.responseText);
                     console.log('data returned:', result);
-                    alert('Found ' + result.data.allPosts.length + ' posts');
+                    alert('Found ' + result.data.posts.length + ' posts');
                 }
-                const body = JSON.stringify({ query: 'query allPosts { allPosts { id } }' });
+                const body = JSON.stringify({ query: 'query posts { posts { id } }' });
                 xhr.send(body);
             });
         </script>

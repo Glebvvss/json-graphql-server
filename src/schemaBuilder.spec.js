@@ -48,38 +48,38 @@ const data = {
 const schema = schemaBuilder(data);
 
 test('all* route returns all entities by default', () =>
-    graphql(schema, '{ allPosts { id } }').then((result) =>
+    graphql(schema, '{ posts { id } }').then((result) =>
         expect(result).toEqual({
             data: {
-                allPosts: [{ id: '1' }, { id: '2' }, { id: '3' }],
+                posts: [{ id: '1' }, { id: '2' }, { id: '3' }],
             },
         })
     ));
 test('all* route supports pagination', () =>
-    graphql(schema, '{ allPosts(page: 0, perPage: 2) { id } }').then((result) =>
+    graphql(schema, '{ posts(page: 0, perPage: 2) { id } }').then((result) =>
         expect(result).toEqual({
             data: {
-                allPosts: [{ id: '1' }, { id: '2' }],
+                posts: [{ id: '1' }, { id: '2' }],
             },
         })
     ));
 test('all* route supports sorting', () =>
     graphql(
         schema,
-        '{ allPosts(sortField: "views", sortOrder: "desc") { id } }'
+        '{ posts(sortField: "views", sortOrder: "desc") { id } }'
     ).then((result) =>
         expect(result).toEqual({
             data: {
-                allPosts: [{ id: '1' }, { id: '3' }, { id: '2' }],
+                posts: [{ id: '1' }, { id: '3' }, { id: '2' }],
             },
         })
     ));
 test('all* route supports filtering', () =>
-    graphql(schema, '{ allPosts(filter: { q: "lorem"}) { id } }').then(
+    graphql(schema, '{ posts(filter: { q: "lorem"}) { id } }').then(
         (result) =>
             expect(result).toEqual({
                 data: {
-                    allPosts: [{ id: '1' }],
+                    posts: [{ id: '1' }],
                 },
             })
     ));

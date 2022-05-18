@@ -108,8 +108,8 @@ Based on your data, json-graphql-server will generate a schema with one type per
 ```graphql
 type Query {
   Post(id: ID!): Post
-  allPosts(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): [Post]
-  _allPostsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
+  posts(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): [Post]
+  _postsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
 }
 type Mutation {
   createPost(data: String): Post
@@ -254,7 +254,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // get a list of entities for a type
 {
-  allPosts {
+  posts {
     title
     views
   }
@@ -265,7 +265,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Lorem Ipsum", views: 254 },
       { "title": "Sic Dolor amet", views: 65 }
     ]
@@ -279,7 +279,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // paginate the results
 {
-  allPosts(page: 0, perPage: 1) {
+  posts(page: 0, perPage: 1) {
     title
     views
   }
@@ -290,7 +290,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Lorem Ipsum", views: 254 },
     ]
   }
@@ -303,7 +303,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // sort the results by field
 {
-  allPosts(sortField: "title", sortOrder: "desc") {
+  posts(sortField: "title", sortOrder: "desc") {
     title
     views
   }
@@ -314,7 +314,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Sic Dolor amet", views: 65 }
       { "title": "Lorem Ipsum", views: 254 },
     ]
@@ -328,7 +328,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // filter the results using the full-text filter
 {
-  allPosts(filter: { q: "lorem" }) {
+  posts(filter: { q: "lorem" }) {
     title
     views
   }
@@ -339,7 +339,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Lorem Ipsum", views: 254 },
     ]
   }
@@ -352,7 +352,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // filter the result using any of the entity fields
 {
-  allPosts(filter: { views: 254 }) {
+  posts(filter: { views: 254 }) {
     title
     views
   }
@@ -363,7 +363,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Lorem Ipsum", views: 254 },
     ]
   }
@@ -377,7 +377,7 @@ Here is how you can use the queries and mutations generated for your data, using
 // all fields (except boolean and array) get not equal filters
 // -lt, _lte, -gt, and _gte
 {
-  allPosts(filter: { title_neq: "Lorem Ipsum" }) {
+  posts(filter: { title_neq: "Lorem Ipsum" }) {
     title
     views
   }
@@ -388,7 +388,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Some Other Title", views: 254 },
     ]
   }
@@ -403,7 +403,7 @@ Here is how you can use the queries and mutations generated for your data, using
 // number fields get range filters
 // -lt, _lte, -gt, and _gte
 {
-  allPosts(filter: { views_gte: 200 }) {
+  posts(filter: { views_gte: 200 }) {
     title
     views
   }
@@ -414,7 +414,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "allPosts": [
+    "posts": [
       { "title": "Lorem Ipsum", views: 254 },
     ]
   }
@@ -483,9 +483,9 @@ It will expose the `JsonGraphqlServer` as a global object:
         xhr.onload = function() {
             const result = JSON.parse(xhr.responseText);
             console.log('data returned:', result);
-            alert('Found ' + result.data.allPosts.length + ' posts');
+            alert('Found ' + result.data.posts.length + ' posts');
         }
-        const body = JSON.stringify({ query: 'query allPosts { allPosts { id } }' });
+        const body = JSON.stringify({ query: 'query posts { posts { id } }' });
         xhr.send(body);
     });
 </script>
@@ -519,9 +519,9 @@ xhr.onerror = function(error) {
 xhr.onload = function() {
     const result = JSON.parse(xhr.responseText);
     console.log('data returned:', result);
-    alert('Found ' + result.data.allPosts.length + ' posts');
+    alert('Found ' + result.data.posts.length + ' posts');
 }
-const body = JSON.stringify({ query: 'query allPosts { allPosts { id } }' });
+const body = JSON.stringify({ query: 'query posts { posts { id } }' });
 xhr.send(body);
 ```
 
@@ -539,11 +539,11 @@ fetchMock.post('http://localhost:3000/graphql', server.getHandler());
 fetch({
     url: 'http://localhost:3000/graphql',
     method: 'POST',
-    body: JSON.stringify({ query: 'query allPosts { allPosts { id } }' })
+    body: JSON.stringify({ query: 'query posts { posts { id } }' })
 })
 .then(response => response.json())
 .then(json => {
-    alert('Found ' + result.data.allPosts.length + ' posts');
+    alert('Found ' + result.data.posts.length + ' posts');
 })
 ```
 
