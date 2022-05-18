@@ -79,7 +79,7 @@ import { getRelatedType } from '../nameConverter';
 export default (data) => {
     const types = getTypesFromData(data);
     const typesByName = types.reduce((types, type) => {
-        types[type.name] = type;
+        types[camelize(type.name, true)] = type;
         return types;
     }, {});
 
@@ -95,14 +95,14 @@ export default (data) => {
     const queryType = new GraphQLObjectType({
         name: 'Query',
         fields: types.reduce((fields, type) => {
-            fields[type.name] = {
-                type: typesByName[type.name],
+            fields[camelize(type.name, true)] = {
+                type: typesByName[camelize(type.name, true)],
                 args: {
                     id: { type: new GraphQLNonNull(GraphQLID) },
                 },
             };
             fields[`${camelize(pluralize(type.name), true)}`] = {
-                type: new GraphQLList(typesByName[type.name]),
+                type: new GraphQLList(typesByName[camelize(type.name, true)]),
                 args: {
                     page: { type: GraphQLInt },
                     perPage: { type: GraphQLInt },
@@ -126,7 +126,7 @@ export default (data) => {
     const mutationType = new GraphQLObjectType({
         name: 'Mutation',
         fields: types.reduce((fields, type) => {
-            const typeFields = typesByName[type.name].getFields();
+            const typeFields = typesByName[camelize(type.name, true)].getFields();
             const nullableTypeFields = Object.keys(typeFields).reduce(
                 (f, fieldName) => {
                     f[fieldName] = Object.assign({}, typeFields[fieldName], {
@@ -158,11 +158,11 @@ export default (data) => {
             });
 
             fields[`create${type.name}`] = {
-                type: typesByName[type.name],
+                type: typesByName[camelize(type.name, true)],
                 args: createFields,
             };
             fields[`createMany${type.name}`] = {
-                type: new GraphQLList(typesByName[type.name]),
+                type: new GraphQLList(typesByName[camelize(type.name, true)]),
                 args: {
                     data: {
                         type: new GraphQLList(createManyInputType),
@@ -170,11 +170,11 @@ export default (data) => {
                 },
             };
             fields[`update${type.name}`] = {
-                type: typesByName[type.name],
+                type: typesByName[camelize(type.name, true)],
                 args: nullableTypeFields,
             };
             fields[`remove${type.name}`] = {
-                type: typesByName[type.name],
+                type: typesByName[camelize(type.name, true)],
                 args: {
                     id: { type: new GraphQLNonNull(GraphQLID) },
                 },
@@ -204,8 +204,8 @@ export default (data) => {
                 const relType = getRelatedType(fieldName);
                 const rel = pluralize(type.toString());
                 ext += `
-extend type ${type} { ${relType}: ${relType} }
-extend type ${relType} { ${rel}: [${type}] }`;
+extend type ${type} { ${camelize(relType, true)}: ${relType} }
+extend type ${relType} { ${camelize(rel, true)}: [${type}] }`;
             });
         return ext;
     }, '');

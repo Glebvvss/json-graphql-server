@@ -42,7 +42,7 @@ const PostType = new GraphQLObjectType({
         title: { type: new GraphQLNonNull(GraphQLString) },
         views: { type: new GraphQLNonNull(GraphQLInt) },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
-        User: { type: UserType },
+        user: { type: UserType },
     }),
 });
 
@@ -51,7 +51,7 @@ const UserType = new GraphQLObjectType({
     fields: () => ({
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
-        Posts: { type: new GraphQLList(PostType) },
+        posts: { type: new GraphQLList(PostType) },
     }),
 });
 
@@ -116,18 +116,18 @@ test('creates one type per data type', () => {
 
 test('creates one field per relationship', () => {
     const typeMap = getSchemaFromData(data).getTypeMap();
-    expect(Object.keys(typeMap['Post'].getFields())).toContain('User');
+    expect(Object.keys(typeMap['Post'].getFields())).toContain('user');
 });
 
 test('creates one field per reverse relationship', () => {
     const typeMap = getSchemaFromData(data).getTypeMap();
-    expect(Object.keys(typeMap['User'].getFields())).toContain('Posts');
+    expect(Object.keys(typeMap['User'].getFields())).toContain('posts');
 });
 
 test('creates three query fields per data type', () => {
     const queries = getSchemaFromData(data).getQueryType().getFields();
-    expect(queries['Post'].type.name).toEqual(PostType.name);
-    expect(queries['Post'].args).toEqual([
+    expect(queries['post'].type.name).toEqual(PostType.name);
+    expect(queries['post'].args).toEqual([
         {
             defaultValue: undefined,
             description: null,
@@ -148,8 +148,8 @@ test('creates three query fields per data type', () => {
     expect(queries['posts'].args[4].type.toString()).toEqual('PostFilter');
     expect(queries['_postsMeta'].type.toString()).toEqual('ListMetadata');
 
-    expect(queries['User'].type.name).toEqual(UserType.name);
-    expect(queries['User'].args).toEqual([
+    expect(queries['user'].type.name).toEqual(UserType.name);
+    expect(queries['user'].args).toEqual([
         {
             defaultValue: undefined,
             description: null,
@@ -274,8 +274,8 @@ test('pluralizes and capitalizes correctly', () => {
         categories: [{ id: 1, name: 'foo' }],
     };
     const queries = getSchemaFromData(data).getQueryType().getFields();
-    expect(queries).toHaveProperty('Foot');
-    expect(queries).toHaveProperty('Category');
+    expect(queries).toHaveProperty('foot');
+    expect(queries).toHaveProperty('category');
     expect(queries).toHaveProperty('feet');
     expect(queries).toHaveProperty('categories');
     const types = getSchemaFromData(data).getTypeMap();

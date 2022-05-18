@@ -53,14 +53,14 @@ Now you can query your data in graphql. For instance, to issue the following que
 
 ```graphql
 {
-    Post(id: 1) {
+    post(id: 1) {
         id
         title
         views
-        User {
+        user {
             name
         }
-        Comments {
+        comments {
             date
             body
         }
@@ -73,14 +73,14 @@ Go to http://localhost:3000/?query=%7B%20Post%28id%3A%201%29%20%7B%20id%20title%
 ```json
 {
     "data": {
-        "Post": {
+        "post": {
             "id": "1",
             "title": "Lorem Ipsum",
             "views": 254,
-            "User": {
+            "user": {
                 "name": "John Doe"
             },
-            "Comments": [
+            "comments": [
                 { "date": "2017-07-03T00:00:00.000Z", "body": "Consectetur adipiscing elit" },
                 { "date": "2017-08-17T00:00:00.000Z", "body": "Nam molestie pellentesque dui" },
             ]
@@ -107,7 +107,7 @@ Based on your data, json-graphql-server will generate a schema with one type per
 
 ```graphql
 type Query {
-  Post(id: ID!): Post
+  post(id: ID!): Post
   posts(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): [Post]
   _postsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
 }
@@ -122,8 +122,8 @@ type Post {
     title: String!
     views: Int!
     user_id: ID!
-    User: User
-    Comments: [Comment]
+    user: User
+    comments: [Comment]
 }
 type PostFilter {
     q: String
@@ -166,7 +166,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // get a single entity, by id
 {
-  Post(id: 1) {
+  post(id: 1) {
     id
     title
     views
@@ -179,7 +179,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "Post": {
+    "post": {
         "id": 1,
         "title": "Lorem Ipsum",
         "views": 254,
@@ -195,9 +195,9 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // include many-to-one relationships
 {
-  Post(id: 1) {
+  post(id: 1) {
     title
-    User {
+    user {
         name
     }
   }
@@ -208,9 +208,9 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 {
   "data": {
-    "Post": {
+    "post": {
         "title": "Lorem Ipsum",
-        "User": {
+        "user": {
             "name": "John Doe"
         }
     } 
@@ -224,7 +224,7 @@ Here is how you can use the queries and mutations generated for your data, using
             <pre>
 // include one-to-many relationships
 {
-  Post(id: 1) {
+  post(id: 1) {
     title
     Comments {
         body

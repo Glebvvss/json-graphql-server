@@ -16,7 +16,7 @@ import hasType from '../introspection/hasType';
 const getQueryResolvers = (entityName, data) => ({
     [`${camelize(pluralize(entityName), true)}`]: all(data),
     [`_${camelize(pluralize(entityName), true)}Meta`]: meta(data),
-    [entityName]: single(data),
+    [camelize(entityName, true)]: single(data),
 });
 
 const getMutationResolvers = (entityName, data) => ({

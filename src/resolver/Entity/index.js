@@ -1,3 +1,4 @@
+import { camelize } from 'inflection';
 import getFieldsFromEntities from '../../introspection/getFieldsFromEntities';
 import {
     getRelatedKey,
@@ -32,8 +33,8 @@ import { isRelationshipField } from '../../relationships';
  *         id: ID!
  *         title: String
  *         user_id: ID
- *         User: User
- *         Comments: [Comment]
+ *         user: User
+ *         comments: [Comment]
  *     }
  *
  * When called for the posts entity, this method generates resolvers
@@ -56,7 +57,7 @@ export default (entityName, data) => {
     const manyToOneResolvers = entityFields.filter(isRelationshipField).reduce(
         (resolvers, fieldName) =>
             Object.assign({}, resolvers, {
-                [getRelatedType(fieldName)]: (entity) =>
+                [camelize(getRelatedType(fieldName), true)]: (entity) =>
                     data[getRelatedKey(fieldName)].find(
                         (relatedRecord) => relatedRecord.id == entity[fieldName]
                     ),
